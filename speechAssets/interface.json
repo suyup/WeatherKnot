@@ -1,0 +1,142 @@
+{
+  "intents": [
+    {
+      "name": "AMAZON.CancelIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "AskIntent",
+      "samples": [
+        "How is the weather {preposition_location} {city_eu} {preposition_time} {date}",
+        "How is the weather {preposition_location} {city_eu} {preposition_time} {time}",
+        "How is the weather {preposition_location} {city} {preposition_time} {date}",
+        "How is the weather {preposition_location} {city} {preposition_time} {time}",
+        "What is the weather {preposition_location} {city_eu} {preposition_time} {date}",
+        "What is the weather {preposition_location} {city_eu} {preposition_time} {time}",
+        "What is the weather {preposition_location} {city} {preposition_time} {date}",
+        "What is the weather {preposition_location} {city} {preposition_time} {time}",
+        "How will the weather be {preposition_location} {city_eu} {preposition_time} {date}",
+        "How will the weather be {preposition_location} {city_eu} {preposition_time} {time}",
+        "How will the weather be {preposition_location} {city} {preposition_time} {date}",
+        "How will the weather be {preposition_location} {city} {preposition_time} {time}",
+        "What will the weather be {preposition_location} {city_eu} {preposition_time} {date}",
+        "What will the weather be {preposition_location} {city_eu} {preposition_time} {time}",
+        "What will the weather be {preposition_location} {city} {preposition_time} {date}",
+        "What will the weather be {preposition_location} {city} {preposition_time} {time}",
+        "Tell me the weather {preposition_location} {city_eu} {preposition_time} {date}",
+        "Tell me the weather {preposition_location} {city_eu} {preposition_time} {time}",
+        "Tell me the weather {preposition_location} {city} {preposition_time} {date}",
+        "Tell me the weather {preposition_location} {city} {preposition_time} {time}",
+        "Is it {weather} {preposition_location} {city_eu} {preposition_time} {date}",
+        "Is it {weather} {preposition_location} {city_eu} {preposition_time} {time}",
+        "Is it {weather} {preposition_location} {city} {preposition_time} {date}",
+        "Is it {weather} {preposition_location} {city} {preposition_time} {time}",
+        "Will it be {weather} {preposition_location} {city_eu} {preposition_time} {date}",
+        "Will it be {weather} {preposition_location} {city_eu} {preposition_time} {time}",
+        "Will it be {weather} {preposition_location} {city} {preposition_time} {date}",
+        "Will it be {weather} {preposition_location} {city} {preposition_time} {time}",
+        "Weather {preposition_time} {time}",
+        "{city} weather",
+        "{city_eu} weather",
+        "Weather {preposition_time} {date}"
+      ],
+      "slots": [
+        {
+          "name": "preposition_location",
+          "type": "PREPOSITION_LOCATION",
+          "samples": []
+        },
+        {
+          "name": "city",
+          "type": "AMAZON.US_CITY",
+          "samples": []
+        },
+        {
+          "name": "city_eu",
+          "type": "AMAZON.EUROPE_CITY",
+          "samples": []
+        },
+        {
+          "name": "preposition_time",
+          "type": "PREPOSITION_TIME",
+          "samples": []
+        },
+        {
+          "name": "time",
+          "type": "AMAZON.TIME",
+          "samples": []
+        },
+        {
+          "name": "date",
+          "type": "AMAZON.DATE",
+          "samples": []
+        },
+        {
+          "name": "weather",
+          "type": "AMAZON.WeatherCondition",
+          "samples": []
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "PREPOSITION_LOCATION",
+      "values": [
+        {
+          "id": null,
+          "name": {
+            "value": "in",
+            "synonyms": [
+              "on",
+              "at"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "PREPOSITION_TIME",
+      "values": [
+        {
+          "id": null,
+          "name": {
+            "value": "on",
+            "synonyms": [
+              "at"
+            ]
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "in",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "before",
+            "synonyms": []
+          }
+        },
+        {
+          "id": null,
+          "name": {
+            "value": "after",
+            "synonyms": []
+          }
+        }
+      ]
+    }
+  ]
+}
