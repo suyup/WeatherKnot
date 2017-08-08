@@ -24,6 +24,9 @@ exports.handler = function(event, context, callback) {
 };
 
 var handlers = {
+	'LaunchRequest': function() {
+		this.emit('AskIntent');
+	},
     'AskIntent': function() {
         console.log('launch!');
         console.log(this.event.request.intent.slots);
