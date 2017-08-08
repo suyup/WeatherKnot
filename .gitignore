@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+#uploaded zip file
+index.zip
+

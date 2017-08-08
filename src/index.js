@@ -29,7 +29,10 @@ var handlers = {
 	},
     'AskIntent': function() {
         console.log('launch!');
-        console.log(this.event.request.intent.slots);
+		let intent = this.event.request.intent;
+		if (intent.slots) {
+	        console.log(this.event.request.intent.slots);	
+		}
         this.emit(':tell', 'something to say');
     },
     'Unhandled': function() {
