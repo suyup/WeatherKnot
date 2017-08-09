@@ -134,15 +134,15 @@ function toDate(epoch) {
     return date;
 }
 
-/// test code
-this.emit = function(action, message) {
-    console.log(`${action}: ${message}`);
-}
-
-this.t = function(key) {
-    return languageString.en.translation[key];
-}
-
-var TestRequest = require('../request.js');
-this.event = TestRequest.event;
-handlers.AskIntent.call(this);
+// /// test code
+// this.emit = function(action, message) {
+//     console.log(`${action}: ${message}`);
+// }
+//
+// this.t = function(key) {
+//     return languageString.en.translation[key];
+// }
+//
+// var TestRequest = require('../request.js');
+// this.event = TestRequest.event;
+// handlers.AskIntent.call(this);

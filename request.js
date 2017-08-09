@@ -35,6 +35,7 @@ var request = {
                 },
                 "city":{  
                     "name":"city",
+					"value":"N.Y.C"
                 },
                 "weather":{  
                     "name":"weather"
