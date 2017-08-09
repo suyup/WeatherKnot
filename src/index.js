@@ -12,7 +12,8 @@ var languageString = {
             'FAIL_MESSAGE': 'There are some issues connecting weather provider server. Please try again later.',
             'CITY_MESSAGE': 'The weather information for %s %s is not found, please try another city or zip code.',
             'TIME_MESSAGE': 'I am only able to forecast weather up to seven days for now.',
-			'ECHO_MESSAGE': 'An Alexa skill invocation issue happened.'
+			'ECHO_MESSAGE': 'An Alexa skill invocation issue happened.',
+			'CONS_MESSAGE': 'Cannot determine current location. Please go to Alexa app and grant permission.'
         }
     } 
 };
@@ -81,6 +82,7 @@ function parseRequest(slots, attr) {
 		}
 	} else {
 		// TODO: fall back to device location
+		throw new Error(this.t('CONS_MESSAGE'));
 	}
 	
 	attr.timeValue = toEpoch(Date.today());
@@ -144,5 +146,3 @@ function toDate(epoch) {
 // var TestRequest = require('../request.js');
 // this.event = TestRequest.event;
 // handlers.AskIntent.call(this);
-
-
