@@ -1,6 +1,7 @@
 'use strict';
 var Alexa = require('alexa-sdk');
 var Weather = require('./weather');
+var Utility = require('./utility');
 
 var APP_ID = 'arn:aws:lambda:us-east-1:497766007594:function:WeatherKnot';
 var languageString = {
@@ -85,11 +86,11 @@ function parseRequest(slots, attr) {
         throw new Error(this.t('CONS_MESSAGE'));
     }
 
-    attr.timeValue = toEpoch(Date.today());
+    attr.timeValue = Utility.toEpoch(Date.today());
 
     if ('date' in slots && 'value' in slots.date) {
         attr.date = slots.date.value;
-        const epoch = toEpoch(attr.date);
+        const epoch = Utility.toEpoch(attr.date);
         if (!isNaN(epoch)) {
             attr.timeValue = epoch;
         } else {
@@ -117,32 +118,6 @@ function parseResponse(json, attr) {
     // TODO: wind, humidity
 }
 
-/// ultilities
-
-Date.today = function() {
-    const date = new Date();
-    return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-};
-
-function toEpoch(date) {
-    return Date.parse(date);
-}
-
-function toDate(epoch) {
-    const date = new Date(0);
-    date.setUTCSeconds(epoch);
-    return date;
-}
-
-// /// test code
-// this.emit = function(action, message) {
-//     console.log(`${action}: ${message}`);
-// }
-//
-// this.t = function(key) {
-//     return languageString.en.translation[key];
-// }
-//
-// var TestRequest = require('../request.js');
-// this.event = TestRequest.event;
-// handlers.AskIntent.call(this);
+// for testing
+exports.AlexaResponseHandlers = handlers;
+exports.languageString = languageString;
