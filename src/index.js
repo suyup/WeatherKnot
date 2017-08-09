@@ -6,11 +6,13 @@ var APP_ID = 'arn:aws:lambda:us-east-1:497766007594:function:WeatherKnot';
 var languageString = {
     'en': {
         'translation': {
-            'CAST_MESSAGE': '%PLACE% is %WEATHER% %TIME%.',
+            'CAST_MESSAGE': 'Weather %s in %s is %s.',
+			'TEMP_MESSAGE': ' Average temerature is %s Celsius degree',
             'HELP_MESSAGE': 'Ask weather, for example, how is the weather today in Atlanta?',
-            'FAIL_MESSAGE': 'There are some issues connecting weather broadcast server. Please try again later.',
-            'CITY_MESSAGE': 'The weather information for place %s is not found, please try another city or zip code.',
-            'TIME_MESSAGE': 'I am only able to forecast weather up to seven days for now.'
+            'FAIL_MESSAGE': 'There are some issues connecting weather provider server. Please try again later.',
+            'CITY_MESSAGE': 'The weather information for %s %s is not found, please try another city or zip code.',
+            'TIME_MESSAGE': 'I am only able to forecast weather up to seven days for now.',
+			'ECHO_MESSAGE': 'Invocation issue happens to Alexa skill.'
         }
     } 
 };
@@ -30,12 +32,119 @@ var handlers = {
     'AskIntent': function() {
         console.log('launch!');
 		let intent = this.event.request.intent;
-		if (intent.slots) {
-	        console.log(this.event.request.intent.slots);	
+		let attributes = {};
+		if (intent && intent.slots) {
+			try {
+				parseRequest(intent.slots, attributes);
+				console.log(attributes);
+				
+				Weather.weather(attributes, (data) => {
+					try {
+						if ('error' in data ) {
+							throw data.error;
+						}
+						parseResponse(data, attributes);
+						console.log(attributes);
+						
+						let message = this.t('CAST_MESSAGE', 'today', attributes.city, attributes.weather);
+						if ('temp' in attributes) {
+							message += this.t('TEMP_MESSAGE', attributes.temp);
+						}
+						this.emit(':tell', message);
+					} catch (error) {
+						this.emit(':tell', error.message);
+					}
+				});
+			} catch (error) {
+				this.emit(':tell', error.message);
+			}
+		} else {
+			this.emit(':tell', this.t('ECHO_MESSAGE'));
 		}
-        this.emit(':tell', 'something to say');
     },
     'Unhandled': function() {
         this.emit(':tell', 'unknown request');
     }
 };
+
+function parseRequest(slots, attr) {
+	if ('zip' in slots && 'value' in slots.zip) {
+		const zip = parseInt(slots.zip.value);
+		if (!isNaN(zip) && zip > 0 && zip < 99999) {
+			attr.zip = slots.zip.value;
+		} else {
+			throw new Error(this.t('CITY_MESSAGE', 'zip code', slots.zip));
+		}
+	} else if ('city' in slots && 'value' in slots.city) {
+		if (/^( ?\.?[a-zA-Z]+)+$/i.test(slots.city.value)) {
+			attr.city = slots.city.value;
+		} else {
+			throw new Error(this.t('CITY_MESSAGE', 'city', slots.city));
+		}
+	} else {
+		// TODO: fall back to device location
+	}
+	
+	attr.timeValue = toEpoch(Date.today());
+	
+	if ('date' in slots && 'value' in slots.date) {
+		attr.date = slots.date.value;
+		const epoch = toEpoch(attr.date);
+		if (!isNaN(epoch)) {
+			attr.timeValue = epoch;
+		} else {
+			throw new Error(this.t('TIME_MESSAGE'));
+		}
+	}
+	if ('time' in slots && 'value' in slots.time) {
+		attr.time = slots.time.value;
+		// TODO: parse time description
+	}
+}
+
+function parseResponse(json, attr) {
+	if ('name' in json) {
+		attr.city = json.name;
+	}
+	if ('weather' in json && json.weather.length > 0 && json.weather[0].description) {
+		attr.weather = json.weather[0].description;
+	} else {
+		throw new Error(this.t('FAIL_MESSAGE'));
+	}
+	if ('main' in json && 'temp' in json.main) {
+		attr.temp = (parseFloat(json.main.temp) - 273.15).toFixed(1);
+	}
+	// TODO: wind, humidity
+}
+
+/// ultilities
+
+Date.today = function() {
+	const date = new Date();
+	return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+};
+
+function toEpoch(date) {
+	return Date.parse(date);
+}
+
+function toDate(epoch) {
+	const date = new Date(0);
+	date.setUTCSeconds(epoch);
+	return date;
+}
+
+// /// test code
+// this.emit = function(action, message) {
+// 	console.log(`${action}: ${message}`);
+// }
+//
+// this.t = function(key) {
+// 	return languageString.en.translation[key];
+// }
+//
+// var TestRequest = require('../request.js');
+// this.event = TestRequest.event;
+// handlers.AskIntent.call(this);
+
+
