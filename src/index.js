@@ -7,12 +7,12 @@ var languageString = {
     'en': {
         'translation': {
             'CAST_MESSAGE': 'Weather %s in %s is %s.',
-			'TEMP_MESSAGE': ' Average temerature is %s Celsius degree',
+			'TEMP_MESSAGE': ' Average temperature is %s Celsius degree.',
             'HELP_MESSAGE': 'Ask weather, for example, how is the weather today in Atlanta?',
             'FAIL_MESSAGE': 'There are some issues connecting weather provider server. Please try again later.',
             'CITY_MESSAGE': 'The weather information for %s %s is not found, please try another city or zip code.',
             'TIME_MESSAGE': 'I am only able to forecast weather up to seven days for now.',
-			'ECHO_MESSAGE': 'Invocation issue happens to Alexa skill.'
+			'ECHO_MESSAGE': 'An Alexa skill invocation issue happened.'
         }
     } 
 };
@@ -30,13 +30,11 @@ var handlers = {
 		this.emit('AskIntent');
 	},
     'AskIntent': function() {
-        console.log('launch!');
 		let intent = this.event.request.intent;
 		let attributes = {};
 		if (intent && intent.slots) {
 			try {
 				parseRequest(intent.slots, attributes);
-				console.log(attributes);
 				
 				Weather.weather(attributes, (data) => {
 					try {
@@ -46,7 +44,7 @@ var handlers = {
 						parseResponse(data, attributes);
 						console.log(attributes);
 						
-						let message = this.t('CAST_MESSAGE', 'today', attributes.city, attributes.weather);
+						let message = this.t('CAST_MESSAGE', 'now', attributes.city, attributes.weather);
 						if ('temp' in attributes) {
 							message += this.t('TEMP_MESSAGE', attributes.temp);
 						}
@@ -63,7 +61,7 @@ var handlers = {
 		}
     },
     'Unhandled': function() {
-        this.emit(':tell', 'unknown request');
+        this.emit(':tell', this.t('HELP_MESSAGE'));
     }
 };
 
